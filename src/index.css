@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  /* Cores */
+  --blue-500: #1E90FF;
+  --blue-400: #4DB2FF;
+  --blue-700: #0B4FD1;
+  --bg-base: #050608;
+  --bg-alt: #0D1117;
+  --surface: #141A23;
+  --border: #243041;
+  --text: #F5F8FC;
+  --text-muted: #9AA7B8;
+  --cta: #B6FF3B;
+  --cta-hover: #C8FF63;
+  --star: #FFC83D;
+
+  /* Tipografia */
+  --font-heading: 'Barlow Condensed', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Raios e sombras */
+  --radius-card: 16px;
+  --radius-img: 20px;
+  --radius-pill: 999px;
+  --shadow-featured: 0 24px 60px rgba(30,144,255,0.3);
+  --glow-brand: 0 0 40px rgba(30,144,255,0.35);
+  
+  --gradient-brand: linear-gradient(135deg, #4DB2FF 0%, #1E90FF 50%, #0B4FD1 100%);
+
+  /* Layout */
+  --container: 1200px;
+  --section-y: 120px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-y: 72px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding-inline: 48px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-inline: 24px;
+  }
+}
+
+/* Utils */
+.text-brand {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cta);
+  color: #050608;
+  border-radius: var(--radius-pill);
+  padding: 16px 32px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+  border: none;
+  cursor: pointer;
+  height: 56px;
+}
+
+@media (max-width: 768px) {
+  .btn-primary {
+    font-size: 15px;
+    width: 100%;
+  }
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(182,255,59,0.35);
+  background: var(--cta-hover);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--blue-400);
+  background: var(--cta-hover);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--text);
+  border-radius: var(--radius-pill);
+  padding: 16px 32px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  transition: all .3s ease-out;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  height: 56px;
+  z-index: 1;
+}
+
+.btn-ghost::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: var(--text);
+  transition: width .3s ease-out;
+  z-index: -1;
+}
+
+.btn-ghost:hover {
+  color: #050608;
+}
+
+.btn-ghost:hover::before {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .btn-ghost {
+    font-size: 15px;
+    width: 100%;
+  }
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; box-shadow: 0 0 60px rgba(30,144,255,0.5); }
+}
+
+.pulse-glow {
+  animation: pulse-glow 4s infinite ease-in-out;
+}
