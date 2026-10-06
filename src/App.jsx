@@ -285,24 +285,37 @@ function App() {
 
       {/* FOOTER */}
       <footer className="footer">
-        <div className="container footer-content">
-          <div className="footer-brand">
-            <span className="logo-text">NOVA FORMA</span>
-            <p>Academia para quem quer cuidar do corpo, ganhar confiança e construir uma rotina de treino que consiga manter.</p>
+        <div className="container">
+          <div className="footer-top">
+            <div className="footer-brand">
+              <span className="logo-text">NOVA FORMA</span>
+              <p>Academia para quem quer cuidar do corpo, ganhar confiança e construir uma rotina de treino que consiga manter.</p>
+              <a href="https://www.instagram.com/novaformaacd?stkn=MW5wemt5NHhxdWhidw==" target="_blank" rel="noreferrer" className="social-link"><InstagramIcon /> @novaformaacd</a>
+            </div>
+
+            <div className="footer-info">
+              <div className="footer-info-block">
+                <div className="footer-info-icon"><MapPin size={20} /></div>
+                <div>
+                  <h4>Endereço</h4>
+                  <p>Rua Arábia, 311 — Bairro das Indústrias</p>
+                  <p>João Pessoa — PB | CEP 58083-607</p>
+                </div>
+              </div>
+
+              <div className="footer-info-block">
+                <div className="footer-info-icon"><Clock size={20} /></div>
+                <div>
+                  <h4>Horários de Funcionamento</h4>
+                  <p>Seg a Sex: 05:20 às 11:00 · 14:00 às 22:00</p>
+                  <p>Sábado: 08:00 às 12:00</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="footer-links">
-            <div>
-              <h4>Contato</h4>
-              <p><MapPin size={16}/> Rua Arábia, 311 — Bairro das Indústrias<br/>João Pessoa — PB | CEP 58083-607</p>
-            </div>
-            <div>
-              <h4>Horários</h4>
-              <p><Clock size={16}/> Seg a Sex: 05:20 às 11:00 | 14:00 às 22:00<br/>Sáb: 08:00 às 12:00</p>
-            </div>
-            <div>
-              <h4>Redes</h4>
-              <a href="https://www.instagram.com/novaformaacd?stkn=MW5wemt5NHhxdWhidw==" target="_blank" rel="noreferrer" className="social-link"><InstagramIcon /> Instagram</a>
-            </div>
+
+          <div className="footer-bottom">
+            <p>© 2026 Academia Nova Forma. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
