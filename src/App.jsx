@@ -1,5 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Menu, X, ArrowRight, CheckCircle2, Play, ChevronDown, ChevronUp, MapPin, Clock } from 'lucide-react';
+import DalaBackground from './components/DalaBackground';
+import LivingHeroImage from './components/LivingHeroImage';
+import CustomCursor from './components/CustomCursor';
+import { useMercuryScroll } from './hooks/useMercuryScroll';
+import { useOryzoScrollTrigger } from './hooks/useOryzoScrollTrigger';
+import { useScrollReveal } from './hooks/useScrollReveal';
+import { useGlobalMagnetic } from './hooks/useMagnetic';
+import { useGlobalCursorParallax } from './hooks/useCursorParallax';
+import './styles/mercury-microinteractions.css';
+import './styles/creative-interactions.css';
 
 const InstagramIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -12,17 +22,28 @@ import './App.css';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
   const [isAnnual, setIsAnnual] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Escopo principal para animações e micro-interações
+  const appScopeRef = useRef(null);
+
+  // Efeito Mercury: Listener de scroll silencioso com debouncing por RAF
+  const { isScrolled } = useMercuryScroll(50);
+
+  // Efeito ORYZO: Referências para scroll-telling com GSAP ScrollTrigger
+  const modalitiesSectionRef = useRef(null);
+  const featuredGraphicRef = useRef(null);
+  useOryzoScrollTrigger(modalitiesSectionRef, featuredGraphicRef);
+
+  // Revelação guiada por Scroll (Page Transitions)
+  useScrollReveal(appScopeRef);
+
+  // Efeito Magnético Global em Botões
+  useGlobalMagnetic(appScopeRef);
+
+  // Parallax de profundidade no Cursor (1% a 2% inverso)
+  useGlobalCursorParallax(appScopeRef);
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -31,9 +52,12 @@ function App() {
   const WHATSAPP_URL = "https://wa.me/5583986355224?text=Olá,%20gostaria%20de%20falar%20com%20um%20consultor!";
 
   return (
-    <div className="app-container">
+    <div className="app-container" ref={appScopeRef}>
+      {/* CURSOR CUSTOMIZADO MINIMALISTA COM MIX-BLEND-MODE */}
+      <CustomCursor />
+
       {/* HEADER */}
-      <header className={`header ${scrolled ? 'scrolled' : ''}`}>
+      <header className={`header mercury-navbar ${isScrolled ? 'scrolled mercury-scrolled' : ''}`}>
         <div className="container header-inner">
           <div className="logo">
             <span className="logo-text">NF</span>
@@ -46,7 +70,7 @@ function App() {
           </nav>
 
           <div className="header-actions">
-            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-primary compact desktop-only">Quero Treinar</a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-primary compact desktop-only mercury-btn">Quero Treinar</a>
             <button className="menu-btn mobile-only" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X /> : <Menu />}
             </button>
@@ -62,14 +86,15 @@ function App() {
             <a href="#planos" onClick={() => setIsMenuOpen(false)}>Planos</a>
             <a href="#depoimentos" onClick={() => setIsMenuOpen(false)}>Depoimentos</a>
           </nav>
-          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-primary" onClick={() => setIsMenuOpen(false)}>Matricule-se</a>
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-primary mercury-btn" onClick={() => setIsMenuOpen(false)}>Matricule-se</a>
         </div>
       )}
 
       {/* HERO SECTION */}
       <section className="hero">
-        <div className="hero-bg">
-          <img src="/hero_bg.jpg" alt="Academia Nova Forma" className="hero-img" loading="eager" fetchpriority="high" />
+        <DalaBackground />
+        <div className="hero-bg cursor-parallax-target">
+          <LivingHeroImage src="/hero_bg.jpg" alt="Academia Nova Forma" className="hero-img" />
           <div className="hero-overlay"></div>
         </div>
         <div className="container hero-content">
@@ -79,8 +104,8 @@ function App() {
             <p className="hero-sub">Seu corpo muda quando você começa. Seu resultado muda quando você não desiste. Estrutura completa, aulas coletivas e planos sem fidelidade.</p>
             
             <div className="hero-ctas">
-              <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-primary">Começar Agora</a>
-              <a href="#planos" className="btn-ghost">Ver Planos ↓</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-primary mercury-btn">Começar Agora</a>
+              <a href="#planos" className="btn-ghost mercury-btn">Ver Planos ↓</a>
             </div>
 
 
@@ -131,14 +156,14 @@ function App() {
       </section>
 
       {/* MODALITIES */}
-      <section className="section-alt modalities-section" id="modalidades">
+      <section className="section-alt modalities-section" id="modalidades" ref={modalitiesSectionRef}>
         <div className="container">
           <div className="section-header">
             <h2>Escolha Como Você Quer Se Movimentar</h2>
           </div>
           
           <div className="modalities-grid">
-            <div className="modality-card">
+            <div className="modality-card" ref={featuredGraphicRef}>
               <img src="/hero_bg.jpg" alt="Musculação" />
               <div className="modality-overlay">
                 <h3>Musculação</h3>
@@ -211,7 +236,7 @@ function App() {
                 <li><CheckCircle2 size={18} /> Musculação Livre</li>
                 <li><CheckCircle2 size={18} /> Sem fidelidade</li>
               </ul>
-              <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-ghost">Quero Começar</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-ghost mercury-btn">Quero Começar</a>
             </div>
 
             <div className="pricing-card featured">
@@ -224,7 +249,7 @@ function App() {
                 <li><CheckCircle2 size={18} /> Acesso Total</li>
                 <li><CheckCircle2 size={18} /> Acompanhamento</li>
               </ul>
-              <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-primary">Quero Meu Plano Anual</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-primary mercury-btn">Quero Meu Plano Anual</a>
             </div>
 
             <div className="pricing-card">
@@ -235,7 +260,7 @@ function App() {
                 <li><CheckCircle2 size={18} /> Total: R$ 195,00</li>
                 <li><CheckCircle2 size={18} /> Musculação</li>
               </ul>
-              <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-ghost">Quero Evoluir</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-ghost mercury-btn">Quero Evoluir</a>
             </div>
           </div>
         </div>
@@ -279,7 +304,7 @@ function App() {
         <div className="container center">
           <h2>Sua Nova Forma Começa Com Uma Decisão.</h2>
           <p>Não espere ter mais tempo. Não espere a próxima segunda-feira.</p>
-          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-primary mt-8">Fale Com Um Consultor</a>
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-primary mt-8 mercury-btn">Fale Com Um Consultor</a>
         </div>
       </section>
 
@@ -321,7 +346,7 @@ function App() {
       </footer>
 
       {/* FLOATING WHATSAPP */}
-      <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="floating-whatsapp">
+      <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="floating-whatsapp mercury-btn">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
       </a>
     </div>
